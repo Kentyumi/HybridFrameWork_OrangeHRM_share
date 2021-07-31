@@ -3,10 +3,12 @@
 <suite name="HybridFrameWork_OrangeHRM" parallel="false">
 
     <listeners>
-    <listeners class-name ="testcases.employee.TestNGListener"/>
+        <listeners class-name="testcases.employee.TestNGListener"/>
     </listeners>
 
-    <test name="Run on chrome ">
+    <parameter name="url" value="https://opensource-demo.orangehrmlive.com"/>
+
+    <test name="Run on chrome">
         <parameter name="browser" value="chrome"/>
         <classes>
             <class name="testcases.employee.Employee_01_Add_Edit_Employee_User"/>
