@@ -6,4 +6,7 @@ import org.openqa.selenium.WebDriver;
 public class LoginPageObject extends AbstractPage {
     public LoginPageObject(WebDriver driver) {
     }
+
+    public LoginPageObject inputToUserNameTextBox(){
+    }
 }

@@ -1,15 +1,29 @@
 package actions.commons;
 
-import org.openqa.selenium.*;
 
+import org.openqa.selenium.*;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 public abstract class AbstractPage {
 
-    JavascriptExecutor jsExecutor;
+    private JavascriptExecutor jsExecutor;
+    private WebElement element;
 
-    public void getPageUrl(WebDriver driver, String pageUrl) {
+    private Alert alert;
+    private Select select;
+
+    private WebDriverWait explicitWait;
+
+    // Function for browser
+
+    public void openPageUrl(WebDriver driver, String pageUrl) {
         driver.get(pageUrl);
     }
 
@@ -47,7 +61,6 @@ public abstract class AbstractPage {
         alert.accept();
     }
 
-    private Alert alert;
 
     public void cancelAlert(WebDriver driver) {
         alert = driver.switchTo().alert();
@@ -96,6 +109,8 @@ public abstract class AbstractPage {
         driver.switchTo().window(parentID);
     }
 
+    // Function for Java Execute
+
     public Object executeForBrowser(WebDriver driver, String javaScript) {
         jsExecutor = (JavascriptExecutor) driver;
         return jsExecutor.executeScript(javaScript);
@@ -122,13 +137,66 @@ public abstract class AbstractPage {
         jsExecutor.executeScript("window.location = '" + url + "'");
     }
 
-    public WebElement getElement(WebDriver driver, String locator) {
-        return driver.findElement(By.xpath(locator));
-    }
-
-    public void highlightElement(WebDriver driver, String locator) {
+    public void highlightElement(WebDriver driver, String xpathValue) {
         jsExecutor = (JavascriptExecutor) driver;
-        WebElement element = getElement(driver, locator);
+        WebElement element = find(driver, xpathValue);
         String originalStyle = element.getAttribute("style");
     }
+
+    // Function for Element
+
+    public WebElement find(WebDriver driver, String xpathValue) {
+        return driver.findElement(byXpath(xpathValue));
+    }
+
+    public List<WebElement> finds(WebDriver driver, String xpathValue) {
+        return driver.findElements(byXpath(xpathValue));
+    }
+
+    public By byXpath(String xpathValue) {
+        return By.xpath(xpathValue);
+    }
+
+    public void clickToElement(WebDriver driver, String xpathValue) {
+        find(driver, xpathValue).click();
+    }
+
+    public void sendKeyToElement(WebDriver driver, String xpathValue) {
+        element = find(driver, xpathValue);
+        element.clear();
+        element.sendKeys();
+    }
+
+    public void selectItemInDropDown(WebDriver driver, String xpathValue, String itemValue) {
+        select = new Select(find(driver, xpathValue));
+        select.selectByVisibleText(itemValue);
+    }
+
+    public String getSelectedItemInDropDown(WebDriver driver, String xpathValue) {
+        select = new Select(find(driver, xpathValue));
+        return select.getFirstSelectedOption().getText();
+    }
+
+    public boolean isDropDownMultiple(WebDriver driver, String xpathValue) {
+        select = new Select(find(driver, xpathValue));
+        return select.isMultiple();
+    }
+
+    public void sleepInSecond(long timeout) {
+        try {
+            Thread.sleep(timeout * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void waitToElementVisible(WebDriver driver, String xpathValue) {
+        WebElement element = find(driver,xpathValue);
+        explicitWait.until(ExpectedConditions.visibilityOfElementLocated(element));
+
+
+    }
+
+
 }

@@ -6,6 +6,9 @@ package actions.commons;
 //import org.openqa.selenium.chrome.ChromeDriver;
 //import org.openqa.selenium.firefox.FirefoxDriver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 public abstract class AbstractTest {
 
 //    WebDriver driver;
@@ -20,4 +23,9 @@ public abstract class AbstractTest {
 //        }
 //        throw new RuntimeException("Please choose browser name!");
 //    }
+    protected final Log log;
+
+    protected AbstractTest() {
+        log = LogFactory.getLog(getClass());
+    }
 }
